@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Denuncia Ciudadana</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h1 style="text-align: center;">Captura o sube tu evidencia</h1>
+
+  <br>
+
+  <button ion-button full color="secondary" (click)="capturarMultimedia()">Abrir Cámara</button>
+
+  <br>
+
+  <button ion-button full (click)="selectMediaFromLibrary()">Abrir Biblioteca</button>
+
+  <hr>
+
+  <h1 style="text-align: center">Multimedia seleccionada</h1>
+
+  <h3>Videos</h3>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ul>
+          <video *ngFor="let video of videos" controls="controls" preload="metadata" webkit-playsinline="webkit-playsinline" class="videoPlayer">
+            <source [src]="video" type="video/mp4" />
+          </video>
+        </ul>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <h3>Images</h3>
+  <ul>
+    <img *ngFor="let image of images" [src]="image" />
+  </ul>
+
+  <button ion-button full (click)="capturarDatos()" [disabled]="images.length <= 0">Siguiente</button>
+
+</ion-content>
