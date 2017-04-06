@@ -1,0 +1,60 @@
+<!--
+  Generated template for the TipoDenuncia page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Tipo de Denuncia</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <!--
+  {{nombre_denuncia}}
+  {{descripcion}}
+  <ul>
+    <li *ngFor="let image of images">{{image}}</li>
+  </ul>
+  <ul>
+    <li *ngFor="let video of videos">{{image}}</li>
+  </ul>
+  {{nombre}}
+  {{apellidos}}
+  {{email}}
+  -->
+
+  <ion-item>
+    <ion-label>Denuncia Anónima</ion-label>
+    <ion-checkbox color="dark" [(ngModel)]="denunciaAnonima"></ion-checkbox>
+  </ion-item>
+
+
+  <h3>Datos de Denuncia</h3>
+
+  <ion-list [hidden]="denunciaAnonima == true">
+    <ion-item>
+      <ion-label fixed>Nombre</ion-label>
+      <ion-input type="text" [(ngModel)]="nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>Apellidos</ion-label>
+      <ion-input type="text" [(ngModel)]="apellidos"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>Email</ion-label>
+      <ion-input type="email" [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <button ion-button full (click)="capturarDatos()" class="button-bottom">Hacer denuncia</button>
+</ion-footer>

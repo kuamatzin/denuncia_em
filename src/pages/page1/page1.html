@@ -40,6 +40,8 @@
     <img *ngFor="let image of images" [src]="image" />
   </ul>
 
-  <button ion-button full (click)="capturarDatos()" [disabled]="images.length <= 0">Siguiente</button>
-
 </ion-content>
+
+<ion-footer>
+  <button ion-button full (click)="capturarDatos()">Siguiente</button>
+</ion-footer>

@@ -5,11 +5,11 @@ import {
   GoogleMap,
   GoogleMapsEvent,
   LatLng,
-  CameraPosition,
   MarkerOptions,
   Marker
 } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation';
+import { TipoDenunciaPage } from '../tipo-denuncia/tipo-denuncia';
 
 /*
   Generated class for the CaptureData page.
@@ -22,15 +22,21 @@ import { Geolocation } from '@ionic-native/geolocation';
   templateUrl: 'capture-data.html'
 })
 export class CaptureDataPage {
-  data;
+  loading: boolean;
+  latitude;
+  longitude;
+  nombre_denuncia: string;
+  descripcion: string;
   videos;
   images;
   map: GoogleMap;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private googleMaps: GoogleMaps, private geolocation: Geolocation) {
+    this.loading = true;
     this.videos = navParams.data.videos;
     this.images = navParams.data.images;
-    this.data = [];
+    this.nombre_denuncia = 'PRI';
+    this.descripcion = 'Pinche PRI';
   }
 
   // Load map only after view is initialize
@@ -42,21 +48,21 @@ export class CaptureDataPage {
     // create LatLng object
     this.geolocation.getCurrentPosition().then((resp) => {
 
-      let latitude = resp.coords.latitude;
-      let longitude = resp.coords.longitude;
+      this.latitude = resp.coords.latitude;
+      this.longitude = resp.coords.longitude;
 
-      this.loadMap(latitude, longitude);
+      this.loadMap();
 
     }).catch((error) => {
       console.log('Error getting location', error);
     });
   }
 
-  loadMap(latitude, longitude) {
+  loadMap() {
 
-    let location: LatLng = new LatLng(latitude, longitude);
+    let currentLocation: LatLng = new LatLng(this.latitude, this.longitude);
 
-    this.map = new GoogleMap('map', {
+    let options = {
       'backgroundColor': 'white',
       'controls': {
         'compass': true,
@@ -71,16 +77,56 @@ export class CaptureDataPage {
         'zoom': true
       },
       'camera': {
-        'latLng': location,
+        'latLng': currentLocation,
         'tilt': 30,
-        'zoom': 15,
+        'zoom': 17,
         'bearing': 50
       }
-    });
+    }
 
-    this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
-      console.log('Map is ready!');
+    this.map = this.googleMaps.create('map', options);
+
+    this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+      this.map.clear();
+      this.loading = false;
+      this.cargarMarcador(currentLocation);
     });
 
   }
+
+  cargarMarcador(currentLocation) {
+    let markerOptions: MarkerOptions = {
+      position: currentLocation,
+      title: 'Denuncia'
+    };
+
+    this.map.addMarker(markerOptions)
+      .then((marker: Marker) => {
+        marker.showInfoWindow();
+        marker.setAnimation('DROP');
+        marker.setDraggable(true);
+        this.accionesMarcador(marker);
+      });
+  }
+
+  accionesMarcador(marker) {
+    marker.addEventListener(GoogleMapsEvent.MARKER_DRAG_END).subscribe((data) => {
+      marker.getPosition().then(data => {
+        this.latitude = data.lat;
+        this.longitude = data.lng;
+      });
+    });
+  }
+
+  capturarDatos() {
+    this.navCtrl.push(TipoDenunciaPage, {
+      images: this.images,
+      videos: this.videos,
+      nombre_denuncia: this.nombre_denuncia,
+      descripcion: this.descripcion,
+      latitud: this.latitude,
+      longitud: this.longitude
+    });
+  }
+
 }
