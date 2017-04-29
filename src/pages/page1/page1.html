@@ -7,41 +7,87 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h1 style="text-align: center;">Captura o sube tu evidencia</h1>
-
-  <br>
-
-  <button ion-button full color="secondary" (click)="capturarMultimedia()">Abrir Cámara</button>
-
-  <br>
-
-  <button ion-button full (click)="selectMediaFromLibrary()">Abrir Biblioteca</button>
-
-  <hr>
-
-  <h1 style="text-align: center">Multimedia seleccionada</h1>
-
-  <h3>Videos</h3>
-  <ion-grid>
+<ion-content>
+  <div class="adjunta-media">
+    <!--Basic: auto-select the icon based on the platform -->
     <ion-row>
-      <ion-col col-12>
-        <ul>
-          <video *ngFor="let video of videos" controls="controls" preload="metadata" webkit-playsinline="webkit-playsinline" class="videoPlayer">
-            <source [src]="video" type="video/mp4" />
-          </video>
-        </ul>
+      <ion-col col-4 offset-4>
+        <img class="adjunta-media_camara" src="assets/img/camera.png" (click)="seleccionarTipoMedia()">
+        <ion-icon name="add-circle" class="adjunta-media_plus" (click)="seleccionarTipoMedia()"></ion-icon>
       </ion-col>
     </ion-row>
-  </ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <h3 class="adjunta-media_titulo">Adjuntar evidencia</h3>
+      </ion-col>
+    </ion-row>
+  </div>
+  <!--
+  <button ion-button full color="secondary" (click)="capturarMultimedia()">Abrir Cámara</button>
+  <button ion-button full (click)="selectMediaFromLibrary()">Abrir Biblioteca</button>
+  -->
 
-  <h3>Images</h3>
-  <ul>
-    <img *ngFor="let image of images" [src]="image" />
-  </ul>
+  <div>
+    <ion-segment [(ngModel)]="media">
+      <ion-segment-button value="images">
+        Imágenes
+      </ion-segment-button>
+      <ion-segment-button value="videos">
+        Videos
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="media">
+    <ion-list *ngSwitchCase="'images'">
+      <div padding>
+
+        <div *ngIf="!images.length" class="no-media">
+          <ion-row>
+            <ion-col col-12>
+              <h3 class="text-center">No has adjuntado imágenes</h3>
+            </ion-col>
+          </ion-row>       
+        </div>
+
+        <ion-grid *ngIf="images.length">
+          <ion-row>
+            <ion-col col-6 *ngFor="let image of images">
+              <div class="img-div">
+                <img [src]="image">
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'videos'">
+      <div padding>
+
+        <div *ngIf="!videos.length" class="no-media">
+          <ion-row>
+            <ion-col col-12>
+              <h3 class="text-center">No has adjuntado videos</h3>
+            </ion-col>
+          </ion-row>       
+        </div>
+
+        <ion-grid *ngIf="videos.length">
+          <ion-row>
+            <ion-col col-12 *ngFor="let video of videos">
+              <video controls="controls" preload="metadata" webkit-playsinline="webkit-playsinline" style="width: 100%; max-height: 240px">
+                <source [src]="video" type="video/mp4" />
+              </video>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-list>
+  </div>
 
 </ion-content>
 
 <ion-footer>
-  <button ion-button full (click)="capturarDatos()">Siguiente</button>
+  <button ion-button full (click)="capturarDatos()" [disabled]="videos.length <= 0 && images.length <= 0" color="denuncia">Siguiente</button>
 </ion-footer>

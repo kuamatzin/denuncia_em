@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, ViewController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { MediaCapture, MediaFile, CaptureError, CaptureImageOptions } from '@ionic-native/media-capture';
 //import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
+//Adjunta videos e imágenes como evidencia en tu denuncia
 
 import { CaptureDataPage } from '../capture-data/capture-data';
 
@@ -15,13 +16,25 @@ import { CaptureDataPage } from '../capture-data/capture-data';
 
 export class Page1 {
 
-  videos;
-  images;
+  media: string = "images";
+  videos: any[];
+  images: any[];
   base64Image;
+  refresh= false;
 
-  constructor(private camera: Camera, public navCtrl: NavController, private mediaCapture: MediaCapture, public alertCtrl: AlertController) {
+  constructor(public viewCtrl: ViewController, private camera: Camera, public navCtrl: NavController, private mediaCapture: MediaCapture, public alertCtrl: AlertController, public navParams: NavParams) {
     this.videos = [];
-    this.images = ['hola'];
+    this.images = [];
+    this.refresh = navParams.data.refresh;
+  }
+
+  ionViewDidEnter() {
+    let nameLastView = this.navCtrl.last().name
+    if(nameLastView == 'TipoDenunciaPage'){
+      this.viewCtrl.showBackButton(false);
+      this.images = [];
+      this.videos = [];
+    }
   }
 
   /*
@@ -59,6 +72,27 @@ export class Page1 {
      });
    }
 
+  seleccionarTipoMedia() {
+    let confirm = this.alertCtrl.create({
+      title: 'Selecciona',
+      buttons: [
+        {
+          text: 'Abrir Cámara',
+          handler: () => {
+            this.capturarMultimedia();
+          }
+        },
+        {
+          text: 'Abrir Biblioteca',
+          handler: () => {
+            this.selectMediaFromLibrary();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+  
   capturarMultimedia() {
     let confirm = this.alertCtrl.create({
       title: 'Abrir Cámara',
@@ -91,7 +125,7 @@ export class Page1 {
           this.videos.push(data[i].fullPath);
         }
       },
-      (err: CaptureError) => alert("Error: " + err.code)
+      (err: CaptureError) => console.log("Error: " + err.code)
       );
   }
 
@@ -106,7 +140,7 @@ export class Page1 {
           this.images.push(data[i].fullPath);
         }
       },
-      (err: CaptureError) => alert("Error: " + err.code)
+      (err: CaptureError) => console.log("Error: " + err.code)
       );
   }
 

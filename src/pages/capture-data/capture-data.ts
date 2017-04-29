@@ -1,16 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import {
-  GoogleMaps,
-  GoogleMap,
-  GoogleMapsEvent,
-  LatLng,
-  MarkerOptions,
-  Marker
-} from '@ionic-native/google-maps';
-import { Geolocation } from '@ionic-native/geolocation';
-import { TipoDenunciaPage } from '../tipo-denuncia/tipo-denuncia';
-
+import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { MapaPage } from '../mapa/mapa';
+import { DatePicker } from '@ionic-native/date-picker';
 /*
   Generated class for the CaptureData page.
 
@@ -22,111 +13,69 @@ import { TipoDenunciaPage } from '../tipo-denuncia/tipo-denuncia';
   templateUrl: 'capture-data.html'
 })
 export class CaptureDataPage {
-  loading: boolean;
-  latitude;
-  longitude;
   nombre_denuncia: string;
   descripcion: string;
   videos;
   images;
-  map: GoogleMap;
+  loader;
+  date: Date;
+  meses: string[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private googleMaps: GoogleMaps, private geolocation: Geolocation) {
-    this.loading = true;
+  constructor(private datePicker: DatePicker, public navCtrl: NavController, public navParams: NavParams, public alertIonic: AlertController) {
     this.videos = navParams.data.videos;
     this.images = navParams.data.images;
-    this.nombre_denuncia = 'PRI';
-    this.descripcion = 'Pinche PRI';
+    this.nombre_denuncia = '';
+    this.descripcion = '';
+    this.date = new Date();
+    this.meses = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Obtubre',
+      'Noviembre',
+      'Diciembre'
+    ];
   }
 
-  // Load map only after view is initialize
-  ngAfterViewInit() {
-    this.setLocation();
-  }
 
-  setLocation() {
-    // create LatLng object
-    this.geolocation.getCurrentPosition().then((resp) => {
-
-      this.latitude = resp.coords.latitude;
-      this.longitude = resp.coords.longitude;
-
-      this.loadMap();
-
-    }).catch((error) => {
-      console.log('Error getting location', error);
-    });
-  }
-
-  loadMap() {
-
-    let currentLocation: LatLng = new LatLng(this.latitude, this.longitude);
-
-    let options = {
-      'backgroundColor': 'white',
-      'controls': {
-        'compass': true,
-        'myLocationButton': true,
-        'indoorPicker': true,
-        'zoom': true
+  fecha() {
+    this.datePicker.show({
+      date: this.date,
+      mode: 'date',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    }).then(
+      date => {
+        if (date > this.date) {
+          let alert = this.alertIonic.create({
+            title: 'Ups!',
+            subTitle: 'Los viajeros del tiempo no pueden cambiar la fecha!',
+            buttons: ['OK']
+          });
+          alert.present();
+        }
+        else {
+          this.date = date
+        }
       },
-      'gestures': {
-        'scroll': true,
-        'tilt': true,
-        'rotate': true,
-        'zoom': true
-      },
-      'camera': {
-        'latLng': currentLocation,
-        'tilt': 30,
-        'zoom': 17,
-        'bearing': 50
-      }
-    }
-
-    this.map = this.googleMaps.create('map', options);
-
-    this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-      this.map.clear();
-      this.loading = false;
-      this.cargarMarcador(currentLocation);
-    });
-
-  }
-
-  cargarMarcador(currentLocation) {
-    let markerOptions: MarkerOptions = {
-      position: currentLocation,
-      title: 'Denuncia'
-    };
-
-    this.map.addMarker(markerOptions)
-      .then((marker: Marker) => {
-        marker.showInfoWindow();
-        marker.setAnimation('DROP');
-        marker.setDraggable(true);
-        this.accionesMarcador(marker);
-      });
-  }
-
-  accionesMarcador(marker) {
-    marker.addEventListener(GoogleMapsEvent.MARKER_DRAG_END).subscribe((data) => {
-      marker.getPosition().then(data => {
-        this.latitude = data.lat;
-        this.longitude = data.lng;
-      });
-    });
+      err => console.log('Error occurred while getting date: ', err)
+      );
   }
 
   capturarDatos() {
-    this.navCtrl.push(TipoDenunciaPage, {
+    this.navCtrl.push(MapaPage, {
       images: this.images,
       videos: this.videos,
       nombre_denuncia: this.nombre_denuncia,
       descripcion: this.descripcion,
-      latitud: this.latitude,
-      longitud: this.longitude
+      fecha: this.date
     });
   }
+
 
 }

@@ -1,3 +1,42 @@
 page-page1 {
-
+        .img-div {
+                width: 100%; /* or whatever you want */
+                height: 240px; /* or whatever you want */
+                line-height: 240px; /* or whatever you want, should match height */
+                text-align: center;
+                margin-top: 10px;
+                background-color: black;
+        }
+        .img-div > img {
+                vertical-align: middle;
+        }
+        .adjunta-media {
+                padding-top: 20px;
+                padding-bottom: 20px;
+                background-color:$denuncia-color;
+                min-height: 200px;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+        }
+        .adjunta-media_camara {
+                width: 100%;
+        }
+        .adjunta-media_plus {
+                font-size: 3.5em;
+                color: white;
+                position: absolute;
+                left: 28; top: 0; right: 0; bottom: 0;
+        }
+        .adjunta-media_titulo {
+                color: white;
+        }
+        .no-media{
+                min-height: 200px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $denuncia-color;
+        }
 }

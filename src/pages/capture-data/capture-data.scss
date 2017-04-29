@@ -3,4 +3,19 @@ page-capture-data {
                 width: 100%;
                 height: 100%;
         }
+        .tinted-image {
+                min-height: 170px;
+                background: 
+                linear-gradient(
+                RGBA(108, 38, 164, 0.75),
+                RGBA(108, 38, 164, 0.75)
+                ),
+                url("../assets/img/capturar-datos.jpg");
+        }
+        .capturar-datos_header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+        }
 }

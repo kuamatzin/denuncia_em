@@ -1,3 +1,20 @@
 page-tipo-denuncia {
-
+        .tinted-image {
+                min-height: 170px;
+                background: 
+                /* top, transparent red, faked with gradient */ 
+                linear-gradient(
+                RGBA(108, 38, 164, 0.65),
+                RGBA(108, 38, 164, 0.65)
+                ),
+                /* bottom, image */
+                url("../assets/img/denuncia.jpg");
+                background-size: cover;
+        }
+        .tipo-denuncia_header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+        }
 }

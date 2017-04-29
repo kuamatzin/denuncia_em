@@ -1,0 +1,67 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Ubicación</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <div class="mapa_header tinted-image">
+    <h3>¿Dónde ocurrió el suceso?</h3>
+    <p>Mantén presionado el marcador para cambiar su ubicación</p>
+    <p>Detalla la información de la ubicacion en la pestaña de Dirección</p>
+  </div>
+
+  <div>
+    <ion-segment [(ngModel)]="ubicacion">
+      <ion-segment-button value="mapa" (click)="setLocation()">
+        Mapa
+      </ion-segment-button>
+      <ion-segment-button value="direccion">
+        Dirección
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="ubicacion">
+    <ion-list *ngSwitchCase="'direccion'">
+
+      <ion-item>
+        <ion-label stacked class="capturar-datos_input">Dirección Línea 1</ion-label>
+        <ion-input type="text" [(ngModel)]="direccion1"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked class="capturar-datos_input">Dirección Línea 2 (Opcional)</ion-label>
+        <ion-input type="texarea" [(ngModel)]="direccion2"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked class="capturar-datos_input">Código Postal</ion-label>
+        <ion-input type="texarea" [(ngModel)]="codigo_postal"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Estado</ion-label>
+        <ion-select #e [(ngModel)]="estado">
+          <ion-option *ngFor="let e of estados" value="{{e.id}}">{{e.name}} </ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked class="capturar-datos_input">Municipio</ion-label>
+        <ion-input type="texarea" [(ngModel)]="municipio"></ion-input>
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'mapa'">
+      <div id="map" style="width: 100%; height: 200px"></div>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <button ion-button full (click)="capturarDatos()" class="button-bottom" color="denuncia">Siguiente</button>
+</ion-footer>
