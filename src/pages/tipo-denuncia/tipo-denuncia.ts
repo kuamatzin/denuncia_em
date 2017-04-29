@@ -148,11 +148,9 @@ export class TipoDenunciaPage {
 
   showModal() {
     let modal = this.modalCtrl.create(ExitoPage);
-    
     modal.present();
-
     modal.onDidDismiss(data => {
-      this.loader.dismiss();
+      //alert(data.toRoot)
       if(data.toRoot) {
         this.navCtrl.setRoot(Page1)
       }

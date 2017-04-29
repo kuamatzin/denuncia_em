@@ -27,7 +27,14 @@ page-page1 {
                 font-size: 3.5em;
                 color: white;
                 position: absolute;
-                left: 28; top: 0; right: 0; bottom: 0;
+                left: 25; top: 0; right: 0; bottom: 0;
+        }
+        .adjunta-delete {
+                position: absolute;
+                left: 20; top: 0; right: 0; bottom: 0;
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
         }
         .adjunta-media_titulo {
                 color: white;

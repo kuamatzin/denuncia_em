@@ -31,7 +31,6 @@ export class Page1 {
   ionViewDidEnter() {
     let nameLastView = this.navCtrl.last().name
     if(nameLastView == 'TipoDenunciaPage'){
-      this.viewCtrl.showBackButton(false);
       this.images = [];
       this.videos = [];
     }
@@ -62,7 +61,7 @@ export class Page1 {
  
      this.camera.getPicture(options).then((imageData) => {
        let typeFile = imageData.substr(imageData.length - 3)
-       if (typeFile == 'mp4') {
+       if (typeFile == 'mp4' || typeFile == 'MOV') {
          this.videos.push(imageData);
        } else {
          this.images.push(imageData);
@@ -142,6 +141,15 @@ export class Page1 {
       },
       (err: CaptureError) => console.log("Error: " + err.code)
       );
+  }
+
+  deleteMedia(mediaType, index){
+    if(mediaType == 'image'){
+      this.images.splice(index, 1);
+    }
+    else {
+      this.videos.splice(index, 1);
+    }
   }
 
   capturarDatos() {
